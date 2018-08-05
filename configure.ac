@@ -28,6 +28,7 @@ m4_ifdef([AC_PACKAGE_URL],,
 
 dnl **** Command-line arguments ****
 
+AC_ARG_ENABLE(asan, AS_HELP_STRING([--enable-asan],[build Wine with AddressSanitizer support]))
 AC_ARG_ENABLE(win16, AS_HELP_STRING([--disable-win16],[do not include Win16 support]))
 AC_ARG_ENABLE(win64, AS_HELP_STRING([--enable-win64],[build a Win64 emulator on AMD64 (won't run Win32 binaries)]))
 AC_ARG_ENABLE(tests, AS_HELP_STRING([--disable-tests],[do not build the regression tests]))
@@ -988,6 +989,15 @@ enable_wineqtdecoder=${enable_wineqtdecoder:-no}
 enable_wineandroid_drv=${enable_wineandroid_drv:-no}
 enable_winemac_drv=${enable_winemac_drv:-no}
 test "$ac_cv_header_linux_joystick_h" = "yes" -o "$ac_cv_header_IOKit_hid_IOHIDLib_h" = "yes" || enable_winejoystick_drv=${enable_winejoystick_drv:-no}
+
+dnl Configure AddressSanitizer (ASAN) build
+if test "x$enable_asan" = "xyes"
+then
+    dnl this also needs to be disabled in loader somehow
+    fixme add shit here
+    LDFLAGS="-fsanitize=address -lasan -lpthread $LDFLAGS"
+    WINE_TRY_CFLAGS([-fsanitize=address])
+fi
 
 dnl Check for cross compiler to build test programs
 AC_SUBST(CROSSTARGET,"")
